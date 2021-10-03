@@ -1,0 +1,46 @@
+Telegram
+Find API: 
+Find Chat ID: https://api.telegram.org/bot<YourBOTToken>/getUpdates
+Find Group Chat ID: 
+SnapSpot Telegeram Group
+
+
+#Install & Configure gammu
+https://edzeame.wordpress.com/2019/06/08/playsms-web-interface-gammu-install-and-configure/
+
+# Find which port is the modem
+udevadm info --query=all -n /dev/ttyUSB1
+
+/lib/systemd/system/gammu-smsd.service 
+gammu --identify
+ 
+#Gammu to set diverts
+gammu-config
+
+gammu divert set all all 64273589003 0
+
+
+#playsms
+
+
+#Install Image - DANGER! Will WIPE!!!
+docker run -d -p 1822:22 -p 80:80 -v /srv/sms/spool:/var/spool/gammu -v /srv/sms/playsms.log:/var/log/playsms/playsms.log playsms/playsms
+docker update --restart always $(docker container ls -q --filter ancestor=playsms/playsms)
+
+#Manually Start the PlaySMS container
+docker start $(docker container ls -q --filter ancestor=playsms/playsms)
+
+docker exec -it $(docker ps -q --filter ancestor=playsms/playsms) playsmsd check
+
+crontab -e
+0,30 * * * * docker exec -it $(docker ps -q --filter ancestor=playsms/playsms) playsmsd check
+
+
+
+
+
+
+
+*/1 * * * * python2 /root/snapspot_outlook_crm_contacts.py
+
+
